@@ -50,6 +50,12 @@ A full-stack HR Management System with role-based access for Employees and HR ad
 2. Run using Live Server (VS Code) or any local server
 3. Frontend runs on `http://localhost:5500`
 
+## Demo Video
+
+[![Watch the demo](https://img.youtube.com/vi/nREZR3E43Dg/0.jpg)](https://youtu.be/nREZR3E43Dg)
+
+Click the image above (or [this link](https://youtu.be/nREZR3E43Dg)) to watch the HRMS project working demo.
+
 ## Author
 
 **Gopinath T**
