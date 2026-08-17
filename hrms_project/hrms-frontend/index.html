@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app="hrmsApp">
+<head>
+  <meta charset="UTF-8">
+  <title>HR Management System</title>
+
+  <!-- AngularJS core + routing -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+
+  <!-- Our app files -->
+  <script src="app.js"></script>
+  <script src="services/loginService.js"></script>
+  <script src="controllers/loginController.js"></script>
+  <script src="services/employeeService.js"></script>
+  <script src="services/departmentService.js"></script>
+  <script src="services/payslipService.js"></script>
+  <script src="controllers/employeeController.js"></script>
+  <script src="controllers/navController.js"></script>
+  <script src="services/attendanceService.js"></script>
+  <script src="controllers/attendanceController.js"></script>
+  <script src="services/leaveService.js"></script>
+  <script src="controllers/leaveController.js"></script>
+  <script src="controllers/profileController.js"></script>
+  <script src="directives/fileModel.js"></script>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body ng-controller="NavController">
+
+  <div ng-if="loggedInEmployee" style="display:flex; align-items:center; justify-content:flex-end; padding: 10px; background: #f0f0f0; gap: 12px;">
+
+    <img ng-if="loggedInEmployee.photoUrl" ng-src="http://localhost:8080{{loggedInEmployee.photoUrl}}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
+    <span ng-if="!loggedInEmployee.photoUrl" style="display:inline-block; width:36px; height:36px; border-radius:50%; background:#ccc; text-align:center; line-height:36px; color:#555; font-size:14px;">{{ loggedInEmployee.empName.charAt(0) }}</span>
+
+    Welcome, {{loggedInEmployee.empName}} ({{loggedInEmployee.role}}) &nbsp;
+
+    <a href="#!/employees" ng-if="loggedInEmployee.role == 'HR'">Employees</a> &nbsp;
+    <a href="#!/my-profile" ng-if="loggedInEmployee.role != 'HR'">My Profile</a> &nbsp;
+    <a href="#!/attendance" ng-if="loggedInEmployee.role == 'HR'">Attendance</a> &nbsp;
+    <a href="#!/leave" ng-if="loggedInEmployee.role == 'HR'">Leave Requests</a> &nbsp;
+
+    <button ng-click="logout()">Logout</button>
+  </div>
+
+  <div ng-view></div>
+</body>
+</html>

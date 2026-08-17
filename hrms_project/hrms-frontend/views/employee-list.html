@@ -1,0 +1,69 @@
+<div class="emp-list-header">
+  <h2>Employee List</h2>
+  <a href="#!/add-employee" class="btn-primary" ng-if="loggedInEmployee.role == 'HR'">+ Add New Employee</a>
+</div>
+
+<div class="emp-table-card">
+  <table class="emp-table">
+    <thead>
+      <tr>
+        <th>Photo</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Designation</th>
+        <th>Department</th>
+        <th>Salary</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="emp in employees">
+        <td class="emp-photo-cell">
+          <img ng-if="emp.photoUrl" ng-src="http://localhost:8080{{emp.photoUrl}}">
+          <span ng-if="!emp.photoUrl" class="emp-photo-placeholder">{{ emp.empName.charAt(0) }}</span>
+        </td>
+        <td>{{ emp.empId }}</td>
+        <td class="emp-name-cell">{{ emp.empName }}</td>
+        <td>{{ emp.email }}</td>
+        <td>{{ emp.phone }}</td>
+        <td>{{ emp.designation }}</td>
+        <td><span class="badge-dept">{{ emp.department.deptName }}</span></td>
+        <td>₹{{ emp.salary }}</td>
+        <td>
+          <button class="btn-delete" ng-click="deleteEmployee(emp.empId)" ng-if="loggedInEmployee.role == 'HR'">Delete</button>
+          <button class="btn-payslip" ng-click="openPayslipForm(emp.empId)" ng-if="loggedInEmployee.role == 'HR'">Generate Payslip</button>
+          <label class="change-photo-link" ng-if="loggedInEmployee.empId == emp.empId">
+            Change Photo
+            <input type="file" accept="image/jpeg,image/png" style="display:none;" file-model="selectedListPhoto" file-change="selectPhoto(selectedListPhoto, emp.empId)">
+          </label>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="emp-empty-state" ng-if="employees.length === 0">No employees found.</p>
+</div>
+
+<!-- Payslip generate form (popup madhiri) -->
+<div ng-if="payslipEmpId" style="border:1px solid #ccc; border-radius:8px; padding:20px; margin-top:20px; max-width:400px;">
+  <h3>Generate Payslip - Employee ID {{payslipEmpId}}</h3>
+  <form ng-submit="generatePayslip()">
+    <label>Month:
+      <select ng-model="payslipForm.month" required>
+        <option value="">-- Select --</option>
+        <option>January</option><option>February</option><option>March</option>
+        <option>April</option><option>May</option><option>June</option>
+        <option>July</option><option>August</option><option>September</option>
+        <option>October</option><option>November</option><option>December</option>
+      </select>
+    </label><br><br>
+    <label>Year: <input type="number" ng-model="payslipForm.year" required></label><br><br>
+    <label>Allowances: <input type="number" ng-model="payslipForm.allowances" required></label><br><br>
+    <label>Deductions: <input type="number" ng-model="payslipForm.deductions" required></label><br><br>
+    <button type="submit">Generate</button>
+    <button type="button" ng-click="closePayslipForm()">Cancel</button>
+  </form>
+  <p style="color:green;">{{payslipMsg}}</p>
+</div>

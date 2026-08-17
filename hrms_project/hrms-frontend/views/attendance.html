@@ -1,0 +1,42 @@
+<div class="att-wrapper">
+
+    <div class="att-header">
+        <h2>My Attendance</h2>
+        <button class="att-mark-btn" ng-click="markAttendance()">Mark Today's Attendance</button>
+    </div>
+
+    <p class="att-message" ng-if="message">{{message}}</p>
+
+    <h3 class="att-history-title">Attendance History</h3>
+
+    <div class="att-table-card">
+        <table class="att-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Check-In Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="att in attendanceList">
+                    <td>{{att.attendanceDate}}</td>
+                    <td>{{att.checkInTime}}</td>
+                    <td>
+                        <span class="status-badge"
+                              ng-class="{
+                                'status-present': att.status == 'Present',
+                                'status-absent': att.status == 'Absent',
+                                'status-late': att.status == 'Late'
+                              }">
+                            {{att.status}}
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="att-empty-state" ng-if="attendanceList.length === 0">No attendance records found.</p>
+    </div>
+
+</div>

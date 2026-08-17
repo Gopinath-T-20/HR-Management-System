@@ -1,0 +1,87 @@
+<h2>Add New Employee</h2>
+
+<form name="empForm" ng-submit="empForm.$valid && addEmployee()" novalidate>
+  <table cellpadding="8">
+    <tr>
+      <td>Name:</td>
+      <td>
+        <input type="text" name="empName" ng-model="newEmp.empName" required>
+        <div style="color:red; font-size:12px;" ng-show="empForm.empName.$touched && empForm.empName.$invalid">Name is required</div>
+      </td>
+    </tr>
+    <tr>
+      <td>Email:</td>
+      <td>
+        <input type="email" name="email" ng-model="newEmp.email" required>
+        <div style="color:red; font-size:12px;" ng-show="empForm.email.$touched && empForm.email.$error.required">Email is required</div>
+        <div style="color:red; font-size:12px;" ng-show="empForm.email.$touched && empForm.email.$error.email">Enter a valid email</div>
+      </td>
+    </tr>
+    <tr>
+      <td>Phone:</td>
+      <td><input type="text" name="phone" ng-model="newEmp.phone"></td>
+    </tr>
+    <tr>
+      <td>Designation:</td>
+      <td><input type="text" name="designation" ng-model="newEmp.designation"></td>
+    </tr>
+    <tr>
+      <td>Department:</td>
+      <td>
+        <select name="department" ng-model="newEmp.department.deptId" required>
+          <option value="">-- Select Department --</option>
+          <option ng-repeat="dept in departments" value="{{dept.deptId}}">{{dept.deptName}}</option>
+        </select>
+        <div style="color:red; font-size:12px;" ng-show="empForm.department.$touched && empForm.department.$invalid">Department is required</div>
+      </td>
+    </tr>
+    <tr>
+      <td>Username:</td>
+      <td>
+        <input type="text" name="username" ng-model="newEmp.username" required minlength="4" maxlength="50">
+        <div style="color:red; font-size:12px;" ng-show="empForm.username.$touched && empForm.username.$error.required">Username is required</div>
+        <div style="color:red; font-size:12px;" ng-show="empForm.username.$touched && empForm.username.$error.minlength">Username must be at least 4 characters</div>
+      </td>
+    </tr>
+    <tr>
+      <td>Password:</td>
+      <td>
+        <input type="text" name="password" ng-model="newEmp.password" required minlength="6">
+        <div style="color:red; font-size:12px;" ng-show="empForm.password.$touched && empForm.password.$error.required">Password is required</div>
+        <div style="color:red; font-size:12px;" ng-show="empForm.password.$touched && empForm.password.$error.minlength">Password must be at least 6 characters</div>
+      </td>
+    </tr>
+    <tr>
+      <td>Role:</td>
+      <td>
+        <select name="role" ng-model="newEmp.role" required>
+          <option value="">-- Select Role --</option>
+          <option value="EMPLOYEE">Employee</option>
+          <option value="HR">HR</option>
+        </select>
+        <div style="color:red; font-size:12px;" ng-show="empForm.role.$touched && empForm.role.$invalid">Role is required</div>
+      </td>
+    </tr>
+    <tr>
+      <td>Date of Join:</td>
+      <td><input type="date" name="dateOfJoin" ng-model="newEmp.dateOfJoin" required></td>
+    </tr>
+    <tr>
+      <td>Salary:</td>
+      <td>
+        <input type="number" name="salary" ng-model="newEmp.salary" required min="1">
+        <div style="color:red; font-size:12px;" ng-show="empForm.salary.$touched && empForm.salary.$invalid">Salary must be greater than zero</div>
+      </td>
+    </tr>
+    <tr>
+      <td>Photo:</td>
+      <td><input type="file" accept="image/jpeg,image/png" file-model="newEmpPhoto"></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <button type="submit">Save Employee</button>
+        <a href="#!/employees">Cancel</a>
+      </td>
+    </tr>
+  </table>
+</form>

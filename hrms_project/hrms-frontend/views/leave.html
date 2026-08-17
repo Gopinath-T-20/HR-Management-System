@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html ng-app="hrmsApp">
+<head>
+    <title>Leave Management</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="app.js"></script>
+    <script src="services/leaveService.js"></script>
+    <script src="controllers/leaveController.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #f4f4f8; }
+        .container { background: white; padding: 24px; border-radius: 12px; max-width: 900px; margin: auto; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        h2 { color: #1e1e2d; font-size: 24px; margin-bottom: 4px; }
+        h3 { color: #1e1e2d; font-size: 17px; margin-top: 24px; margin-bottom: 10px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px 14px; text-align: left; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
+        th { background: #f8f7fc; color: #6c4ce0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; border-bottom: 2px solid #eee; }
+        tr:hover td { background: #faf9ff; }
+
+        label { font-weight: 600; margin-top: 12px; display: block; font-size: 13px; color: #333; }
+        input, select {
+            padding: 9px 10px;
+            margin: 5px 0 10px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        input:focus, select:focus { outline: none; border-color: #6c4ce0; }
+
+        button {
+            background: #6c4ce0;
+            color: white;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-right: 6px;
+        }
+        button:hover { background: #5a3dc7; }
+        button.reject { background: #fdeaea; color: #c0392b; }
+        button.reject:hover { background: #f8d7da; }
+
+        .message { color: #27ae60; font-weight: 600; margin-top: 10px; font-size: 14px; }
+
+        .status-pending, .status-approved, .status-rejected {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-pending { background: #fff6e0; color: #b8860b; }
+        .status-approved { background: #e8f8ee; color: #27ae60; }
+        .status-rejected { background: #fdeaea; color: #c0392b; }
+    </style>
+</head>
+<body ng-controller="LeaveController">
+
+<div class="container">
+    <h2>Leave Management</h2>
+
+    <!-- ============ EMPLOYEE VIEW ============ -->
+    <div ng-if="loggedInEmployee.role !== 'HR'">
+
+        <h3>Apply for Leave</h3>
+        <form ng-submit="applyLeave()">
+            <label>From Date:</label>
+            <input type="date" ng-model="newLeave.fromDate" required>
+
+            <label>To Date:</label>
+            <input type="date" ng-model="newLeave.toDate" required>
+
+            <label>Reason:</label>
+            <input type="text" ng-model="newLeave.reason" placeholder="Reason for leave" required>
+
+            <button type="submit">Apply Leave</button>
+        </form>
+
+        <p class="message">{{ message }}</p>
+
+        <h3>My Leave History</h3>
+        <table>
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Reason</th>
+                <th>Status</th>
+            </tr>
+            <tr ng-repeat="leave in myLeaves">
+                <td>{{ leave.fromDate }}</td>
+                <td>{{ leave.toDate }}</td>
+                <td>{{ leave.reason }}</td>
+                <td>
+                    <span ng-class="{
+                        'status-pending': leave.status === 'Pending',
+                        'status-approved': leave.status === 'Approved',
+                        'status-rejected': leave.status === 'Rejected'
+                    }">{{ leave.status }}</span>
+                </td>
+            </tr>
+            <tr ng-if="myLeaves.length === 0">
+                <td colspan="4">No leave records found.</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ============ HR VIEW ============ -->
+    <div ng-if="loggedInEmployee.role === 'HR'">
+
+        <h3>All Leave Requests</h3>
+        <table>
+            <tr>
+                <th>Emp ID</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            <tr ng-repeat="leave in allLeaves">
+                <td>{{ leave.employee.empId }} - {{ leave.employee.empName }}</td>
+                <td>{{ leave.fromDate }}</td>
+                <td>{{ leave.toDate }}</td>
+                <td>{{ leave.reason }}</td>
+                <td>
+                    <span ng-class="{
+                        'status-pending': leave.status === 'Pending',
+                        'status-approved': leave.status === 'Approved',
+                        'status-rejected': leave.status === 'Rejected'
+                    }">{{ leave.status }}</span>
+                </td>
+                <td>
+                    <button ng-if="leave.status === 'Pending'" ng-click="updateStatus(leave.leaveId, 'Approved')">Approve</button>
+                    <button ng-if="leave.status === 'Pending'" class="reject" ng-click="updateStatus(leave.leaveId, 'Rejected')">Reject</button>
+                </td>
+            </tr>
+            <tr ng-if="allLeaves.length === 0">
+                <td colspan="6">No leave requests found.</td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+<div style="max-width: 900px; margin: 20px auto; font-family: Arial, sans-serif;">
+
+    <!-- Employee Details -->
+    <div style="border: 1px solid #ccc; border-radius: 8px; padding: 20px; margin-bottom: 20px; display: flex; gap: 20px; align-items: flex-start;">
+
+        <div style="text-align: center;">
+            <img ng-if="employee.photoUrl" ng-src="http://localhost:8080{{employee.photoUrl}}" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border: 2px solid #ddd;">
+            <div ng-if="!employee.photoUrl" style="width:100px; height:100px; border-radius:50%; background:#ccc; text-align:center; line-height:100px; font-size:32px; color:#555;">
+                {{ employee.empName.charAt(0) }}
+            </div>
+            <br>
+            <label style="cursor:pointer; color:#2980b9; font-size:13px;">
+                Change Photo
+                <input type="file" accept="image/jpeg,image/png" style="display:none;" file-model="selectedProfilePhoto" file-change="selectProfilePhoto(selectedProfilePhoto)">
+            </label>
+        </div>
+
+        <div>
+            <h2>{{employee.empName}}</h2>
+            <p><strong>Employee ID:</strong> {{employee.empId}}</p>
+            <p><strong>Email:</strong> {{employee.email}}</p>
+            <p><strong>Phone:</strong> {{employee.phone}}</p>
+            <p><strong>Designation:</strong> {{employee.designation}}</p>
+            <p><strong>Date of Joining:</strong> {{employee.dateOfJoin}}</p>
+        </div>
+    </div>
+
+    <!-- Attendance -->
+    <div style="border: 1px solid #ccc; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+        <h3>My Attendance</h3>
+        <button ng-click="markAttendance()">Mark Today's Attendance</button>
+        <table style="width: 100%; margin-top: 10px; border-collapse: collapse;">
+            <tr style="background: #f0f0f0;">
+                <th style="text-align:left; padding:6px;">Date</th>
+                <th style="text-align:left; padding:6px;">Check-In</th>
+                <th style="text-align:left; padding:6px;">Status</th>
+            </tr>
+            <tr ng-repeat="a in attendanceList">
+                <td style="padding:6px;">{{a.attendanceDate}}</td>
+                <td style="padding:6px;">{{a.checkInTime}}</td>
+                <td style="padding:6px;">{{a.status}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Leave -->
+    <div style="border: 1px solid #ccc; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+        <h3>My Leaves</h3>
+
+        <form ng-submit="applyLeave()">
+            <label>From: <input type="date" ng-model="leaveForm.fromDate" required></label> &nbsp;
+            <label>To: <input type="date" ng-model="leaveForm.toDate" required></label> &nbsp;
+            <input type="text" ng-model="leaveForm.reason" placeholder="Reason" required> &nbsp;
+            <button type="submit">Apply Leave</button>
+        </form>
+        <p ng-if="leaveMsg" ng-class="leaveMsg.indexOf('success') > -1 ? 'msg-success' : 'msg-error'">{{leaveMsg}}</p>
+
+        <table style="width: 100%; margin-top: 10px; border-collapse: collapse;">
+            <tr style="background: #f0f0f0;">
+                <th style="text-align:left; padding:6px;">From</th>
+                <th style="text-align:left; padding:6px;">To</th>
+                <th style="text-align:left; padding:6px;">Reason</th>
+                <th style="text-align:left; padding:6px;">Status</th>
+            </tr>
+            <tr ng-repeat="l in leaveList">
+                <td style="padding:6px;">{{l.fromDate}}</td>
+                <td style="padding:6px;">{{l.toDate}}</td>
+                <td style="padding:6px;">{{l.reason}}</td>
+                <td style="padding:6px;">
+                    <span ng-class="{
+                        'status-pending': l.status == 'Pending',
+                        'status-approved': l.status == 'Approved',
+                        'status-rejected': l.status == 'Rejected'
+                    }">{{l.status}}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Payslips -->
+    <!-- Payslips -->
+<div class="payslip-card">
+    <h3>My Payslips</h3>
+    <table class="payslip-table">
+        <thead>
+            <tr>
+                <th>Month</th>
+                <th>Year</th>
+                <th>Net Salary</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="p in payslipList">
+                <td>{{p.month}}</td>
+                <td>{{p.year}}</td>
+                <td>₹{{p.netSalary}}</td>
+                <td><button class="btn-download" ng-click="downloadPayslip(p)">Download PDF</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="payslip-empty-state" ng-if="payslipList.length === 0">No payslips generated yet.</p>
+</div>
+        <p ng-if="payslipList.length === 0" style="margin-top:10px; color:#777;">No payslips generated yet.</p>
+    </div>
+
+</div>
